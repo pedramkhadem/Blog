@@ -8,15 +8,17 @@ use App\Models\BlogPost;
 use App\Models\Image;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Session\Store;
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function __construct()
+    public function __construct(BlogPost $blogPost)
     {
         $this->middleware('auth')->except('index' , 'show');
+        $this->blogpost=$blogPost;
     }
     public function index()
     {
@@ -40,35 +42,51 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        $validated_data=$request->validated();
 
-        $input = $request->all();
+        $this->articleService->handleUploadedImage($request->file('image'));
+        $blogPost = BlogPost::create([
+            'title' => $request->safe()->title,
+            'body' => $request->safe()->body,
+            'slug' => $request->safe()->title,
+            'user_id' => auth()->user()->id,
+        ]);
 
-            $input['title'] = $validated_data['title'];
-            $input['body'] = $validated_data['body'];
-            $input['slug']= $validated_data['title'];
-            $input['user_id'] = auth()->user()->id;
-
-        $newPost= BlogPost::create($input);
-
-        $input = $request->all();
-        if ($image = $request->file('image')) {
-            $path = 'public/images/';
-            $imageName = time() . "." . $image->getClientOriginalExtension();
-            $image->move($path, $imageName);
-            $input['image'] = "$imageName";
-        }
-
-        $input['name'] = $validated_data['title'];
-        $input['blogpost_id']= $newPost->id;
-
-         Image::create($input);
-
-
-
-
-        return redirect('blogposts/' . $newPost->id);
+        return redirect('blogposts/' . $blogPost->id);
     }
+
+    class ArticleService
+    {
+        public function handleUploadedImage($image, $blogPost)
+        {
+            if (!is_null($image)) {
+                $path = 'public/images/';
+                $imageName = time() . "." . $image->getClientOriginalExtension();
+                $image->move($path, $imageName);
+            }
+            $upload_image_url = "$imageName";
+            Image::create([
+                'blogpost_id' => $this->$blogPost->id,
+                'image' => $upload_image_url,
+                'name' => store()->title,
+            ]);
+        }
+    }
+
+//        if($request->hasFile('image')) {
+//            $image=$request->file('image');
+//            $path = 'public/images/';
+//            $imageName = time() . "." . $image->getClientOriginalExtension();
+//            $image->move($path, $imageName);
+//            $upload_image_url = "$imageName";
+//            Image::create([
+//                'blogpost_id'=>$newPost->id ,
+//                'image'=>$upload_image_url,
+//                'name'=>$request->safe()->title,
+//            ]);
+//        }
+
+
+
 
     /**
      * Display the specified resource.
