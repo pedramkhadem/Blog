@@ -15,10 +15,10 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function __construct(BlogPost $blogPost)
+    public function __construct()
     {
         $this->middleware('auth')->except('index' , 'show');
-        $this->blogpost=$blogPost;
+
     }
     public function index()
     {
@@ -42,48 +42,30 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-
-        $this->articleService->handleUploadedImage($request->file('image'));
-        $blogPost = BlogPost::create([
+         $newPost=BlogPost::create([
             'title' => $request->safe()->title,
             'body' => $request->safe()->body,
             'slug' => $request->safe()->title,
             'user_id' => auth()->user()->id,
         ]);
 
-        return redirect('blogposts/' . $blogPost->id);
-    }
-
-    class ArticleService
-    {
-        public function handleUploadedImage($image, $blogPost)
-        {
-            if (!is_null($image)) {
-                $path = 'public/images/';
-                $imageName = time() . "." . $image->getClientOriginalExtension();
-                $image->move($path, $imageName);
-            }
+        if($request->hasFile('image')) {
+            $image=$request->file('image');
+            $path = 'public/images/';
+            $imageName = time() . "." . $image->getClientOriginalExtension();
+            $image->move($path, $imageName);
             $upload_image_url = "$imageName";
             Image::create([
-                'blogpost_id' => $this->$blogPost->id,
-                'image' => $upload_image_url,
-                'name' => store()->title,
+                'blogpost_id'=>$newPost->id ,
+                'image'=>$upload_image_url,
+                'name'=>$request->safe()->title,
             ]);
-        }
-    }
+            return redirect('blogposts/' . $newPost->id);
 
-//        if($request->hasFile('image')) {
-//            $image=$request->file('image');
-//            $path = 'public/images/';
-//            $imageName = time() . "." . $image->getClientOriginalExtension();
-//            $image->move($path, $imageName);
-//            $upload_image_url = "$imageName";
-//            Image::create([
-//                'blogpost_id'=>$newPost->id ,
-//                'image'=>$upload_image_url,
-//                'name'=>$request->safe()->title,
-//            ]);
-//        }
+        }
+
+
+    }
 
 
 
