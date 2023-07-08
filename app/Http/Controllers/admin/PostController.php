@@ -102,16 +102,21 @@ class PostController extends Controller
             $imageName = time() . "." . $image->getClientOriginalExtension();
             $image->move($path, $imageName);
             $upload_image_url = "$imageName";
-            $blogpost->images()->update([
+            if($blogpost->images != null)
+            {
+                $blogpost->images()->update([
                 'image' => $upload_image_url,
                 'name' => $validated_data['title'],
                 'blogpost_id'=>$blogpost->id,
+                ]);
+            }
+            else
+            {
+                $blogpost->images()->create([
+                'image' => $upload_image_url,
+                'name' => $validated_data['title'],
             ]);
-        }
-        else
-        {
-            $input = $request->all();
-            unset($input['image']);
+            }
         }
 
         return redirect('blogposts/' . $blogpost->id);
