@@ -1,6 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <div class="container">
         <div class="row">
@@ -12,7 +22,7 @@
 
                     <hr>
 
-                    <form action="/blogposts/{{$post->id}}" method="post">
+                    <form action="/blogposts/{{$post->id}}" method="post" enctype="multipart/form-data">
                         @csrf
                         @method('put')
                         <div class="row">
@@ -25,6 +35,11 @@
                                 <label for="body">Post Body</label>
                                 <textarea id="body" class="form-control" name="body" placeholder="Enter Post Body"
                                           rows="" >{{$post->body}}</textarea>
+                            </div>
+                            <div class="control-group col-12">
+                                <strong>Image:</strong>
+                                <input type="file" name="image" placeholder="Upload Image" class="form-control" >
+
                             </div>
                         </div>
                         <div class="row mt-2">

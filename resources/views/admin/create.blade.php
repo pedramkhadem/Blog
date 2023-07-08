@@ -37,7 +37,6 @@
                                 <strong>Image:</strong>
                                 <input type="file" name="image" placeholder="Upload Image" class="form-control" >
 
-
                             </div>
                         </div>
                         <div class="row mt-2">

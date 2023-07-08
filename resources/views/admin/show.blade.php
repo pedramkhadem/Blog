@@ -8,12 +8,13 @@
             <div class="col-12 pt-2">
                 <a href="/blogposts" class="btn btn-outline-primary btn-sm">Go Back</a>
                 <div class="col-xs-12 col-sm-12 col-md-12">
+                    <!-- image gallery -->
                     @forelse($post->images as $image)
                         <div class="form-group">
                             <img src="/public/images/{{$image->image}}"  height="500px" width="900px">
                         </div>
                     @empty
-                        <p>Error-- There is no Image ,sorry</p>
+                        <p> Error there is no image ....</p>
                     @endforelse
                 </div>
                 <br>

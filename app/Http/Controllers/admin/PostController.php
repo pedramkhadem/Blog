@@ -63,13 +63,7 @@ class PostController extends Controller
             return redirect('blogposts/' . $newPost->id);
 
         }
-
-
     }
-
-
-
-
     /**
      * Display the specified resource.
      */
@@ -86,7 +80,7 @@ class PostController extends Controller
     {
         $post = $blogpost;
         return view('admin.edit' , [
-            'post' => $post,
+            'post' => $blogpost,
         ]);
     }
 
@@ -95,23 +89,30 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, BlogPost $blogpost)
     {
+
         $validated_data = $request->validated();
-//        $blogpost->update([
-//            'title' => $validated_data['title'],
-//            'body' => $validated_data['body'],
-//            'slug' => $validated_data['title']
-//        ]);
-        $input = $request->all();
-        if ($image = $request->file('image')) {
-            $destinationPath = 'image/';
-            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
-            $image->move($destinationPath, $profileImage);
-            $input['image'] = "$profileImage";
-        }else{
+        $blogpost->update([
+            'title' => $validated_data['title'],
+            'body' => $validated_data['body'],
+            'slug' => $validated_data['title'],
+            ]);
+        if($request->hasFile('image')) {
+            $image = $request->file('image');
+            $path = 'public/images';
+            $imageName = time() . "." . $image->getClientOriginalExtension();
+            $image->move($path, $imageName);
+            $upload_image_url = "$imageName";
+            $blogpost->images()->update([
+                'image' => $upload_image_url,
+                'name' => $validated_data['title'],
+                'blogpost_id'=>$blogpost->id,
+            ]);
+        }
+        else
+        {
+            $input = $request->all();
             unset($input['image']);
         }
-
-        $blogpost->update($input);
 
         return redirect('blogposts/' . $blogpost->id);
     }
