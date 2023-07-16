@@ -7,15 +7,17 @@
         <div class="row">
             <div class="col-12 pt-2">
                 <a href="/blogposts" class="btn btn-outline-primary btn-sm">Go Back</a>
+                <br>
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <!-- image gallery -->
-                    @forelse($post->images as $image)
+                    <br>
+                    @if($post->image)
                         <div class="form-group">
-                            <img src="/public/images/{{$image->image}}"  height="500px" width="900px">
+                            <img src="/public/images/{{$post->image->image}}"  height="500px" width="900px">
                         </div>
-                    @empty
-                        <p> Error there is no image ....</p>
-                    @endforelse
+                    @else
+                        <img src="/image/HelloWorld.svg.png"  width="900px">
+                    @endif
                 </div>
                 <br>
                 <h1 class="display-one">{{ucfirst($post->title)}}</h1>
@@ -52,6 +54,34 @@
             </div>
         </div>
     </div>
+
+00
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

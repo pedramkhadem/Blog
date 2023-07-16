@@ -20,6 +20,10 @@ class BlogPost extends Model
         return $this->hasMany(Comment::class , 'blogpost_id')->whereNull('parent_id');
     }
     public function images(){
-        return $this->hasMany(Image::class,'blogpost_id');
+        return $this->hasMany(Image::class,'blogpost_id')->where('type','=' ,'gallery');
+    }
+
+    public function image(){
+        return $this->hasOne(Image::class,'blogpost_id')->where('type','=' ,'thumbnail');
     }
 }

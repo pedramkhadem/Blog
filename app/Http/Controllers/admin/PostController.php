@@ -9,6 +9,7 @@ use App\Models\Image;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
+use function PHPUnit\Framework\isEmpty;
 
 class PostController extends Controller
 {
@@ -17,13 +18,14 @@ class PostController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except('index' , 'show');
+        $this->middleware('auth')->except('index', 'show');
 
     }
+
     public function index()
     {
         $posts = BlogPost::all();
-        return view('admin.index' ,[
+        return view('admin.index', [
 
             'posts' => $posts,
         ]);
@@ -42,28 +44,29 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-         $newPost=BlogPost::create([
+        $newPost = BlogPost::create([
             'title' => $request->safe()->title,
             'body' => $request->safe()->body,
             'slug' => $request->safe()->title,
             'user_id' => auth()->user()->id,
         ]);
 
-        if($request->hasFile('image')) {
-            $image=$request->file('image');
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
             $path = 'public/images/';
             $imageName = time() . "." . $image->getClientOriginalExtension();
             $image->move($path, $imageName);
             $upload_image_url = "$imageName";
             Image::create([
-                'blogpost_id'=>$newPost->id ,
-                'image'=>$upload_image_url,
-                'name'=>$request->safe()->title,
+                'blogpost_id' => $newPost->id,
+                'image' => $upload_image_url,
+                'name' => $request->safe()->title,
+                'type'=>'thumbnail'
             ]);
-            return redirect('blogposts/' . $newPost->id);
-
         }
+        return redirect('blogposts/' . $newPost->id);
     }
+
     /**
      * Display the specified resource.
      */
@@ -73,13 +76,14 @@ class PostController extends Controller
             'post' => $blogpost,
         ]);
     }
+
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(BlogPost $blogpost)
     {
         $post = $blogpost;
-        return view('admin.edit' , [
+        return view('admin.edit', [
             'post' => $blogpost,
         ]);
     }
@@ -95,28 +99,37 @@ class PostController extends Controller
             'title' => $validated_data['title'],
             'body' => $validated_data['body'],
             'slug' => $validated_data['title'],
-            ]);
-        if($request->hasFile('image')) {
+        ]);
+        if ($request->hasFile('image')) {
             $image = $request->file('image');
             $path = 'public/images';
             $imageName = time() . "." . $image->getClientOriginalExtension();
             $image->move($path, $imageName);
             $upload_image_url = "$imageName";
-            if($blogpost->images != null)
-            {
-                $blogpost->images()->update([
-                'image' => $upload_image_url,
-                'name' => $validated_data['title'],
-                'blogpost_id'=>$blogpost->id,
-                ]);
-            }
-            else
-            {
-                $blogpost->images()->create([
-                'image' => $upload_image_url,
-                'name' => $validated_data['title'],
-            ]);
-            }
+
+
+            $blogpost->image()->updateOrCreate(
+                ['blogpost_id' => $blogpost->id],
+                ['image' => $upload_image_url,
+                    'name' => $validated_data['title'],
+                    'type'=>'thumbnail'
+
+                ]
+            );
+
+
+//            if (empty($blogpost->images)) {
+//                $blogpost->images()->create([
+//                    'image' => $upload_image_url,
+//                    'name' => $validated_data['title'],
+//                    'blogpost_id' => $blogpost->id,
+//                ]);
+//            } else {
+//                $blogpost->images()->update([
+//                    'image' => $upload_image_url,
+//                    'name' => $validated_data['title'],
+//                ]);
+//            }
         }
 
         return redirect('blogposts/' . $blogpost->id);
