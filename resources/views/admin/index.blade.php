@@ -1,7 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <style>
+        body {background-color: #000000;}
+        h1   {color: #ffffff;}
+        p    {color: #ffffff;}
+    </style>
+    <div class="container" >
         <div class="row">
             <div class="col-12 pt-2">
                 <div class="row">
@@ -45,7 +50,8 @@
                         @endforelse
                         </tbody>
                     </table>
-
+                <!-- paginate -->
+                {{$posts->links() }}
 
             </div>
         </div>

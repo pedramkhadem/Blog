@@ -11,6 +11,8 @@ class BlogPost extends Model
 
     protected $fillable = ['title', 'body', 'slug' , 'user_id'];
 
+
+
     public function user() {
         return $this->belongsTo(User::class);
     }
@@ -26,4 +28,6 @@ class BlogPost extends Model
     public function image(){
         return $this->hasOne(Image::class,'blogpost_id')->where('type','=' ,'thumbnail');
     }
+
+
 }

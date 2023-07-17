@@ -24,11 +24,9 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = BlogPost::all();
-        return view('admin.index', [
+       $posts = BlogPost::paginate(10)->withQueryString();
 
-            'posts' => $posts,
-        ]);
+        return view('admin.index',compact('posts'));
     }
 
     /**
