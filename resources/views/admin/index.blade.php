@@ -12,7 +12,7 @@
                 <div class="row">
                     <div class="col-8">
                         <h1 class="display-one">Pedi Blog!</h1>
-                        <p>Enjoy reading our posts. Click on a post to read! of pediblog</p>
+                        <p>Enjoy reading our posts. Click on a show post to read ! of pediblog</p>
                     </div>
                     <div class="col-4">
                         <p>Create new Post</p>

@@ -24,8 +24,14 @@
 
 
         </form>
+
         @include('commentsDisplay', ['comments' => $comment->replies])
+
 
     </div>
 
 @endforeach
+
+
+
+

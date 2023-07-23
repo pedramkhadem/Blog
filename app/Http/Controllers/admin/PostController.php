@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Models\BlogPost;
+use App\Models\Comment;
 use App\Models\Image;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -18,8 +19,8 @@ class PostController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except('index', 'show');
-
+        $this->middleware('auth');
+        //->except('index', 'show')
     }
 
     public function index()
@@ -70,8 +71,11 @@ class PostController extends Controller
      */
     public function show(BlogPost $blogpost)
     {
+
+        $comment = $blogpost->comments()->Paginate(5)->withQueryString() ;
         return view('admin.show', [
             'post' => $blogpost,
+            'cm'=>$comment,
         ]);
     }
 

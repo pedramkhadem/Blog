@@ -2,6 +2,17 @@
 
 @section('content')
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
 
     <div class="container">
         <div class="row">
@@ -27,7 +38,8 @@
                 <br><br>
 
                 <!-- comment system -->
-                @include('commentsDisplay', ['comments' => $post->comments, 'blogpost_id' => $post->id])
+
+                @include('commentsDisplay', ['comments' => $cm, 'blogpost_id' => $post->id])
 
                 <h4>Add comment</h4>
 
@@ -41,9 +53,12 @@
 
                         <button type="submit" class="btn btn-success" >Add Comment</button>
 
+
                     </div>
 
                 </form>
+
+
                 <hr>
                 <form action="/blogposts/{{$post->id}}" id="delete-frm" method="post">
                     @method('DELETE')
@@ -51,11 +66,13 @@
                     <button class="btn btn-danger">Delete Post</button>
 
                 </form>
+                <!-- paginate -->
+            {{$cm->links()}}
             </div>
         </div>
+
     </div>
 
-00
 
 
 
