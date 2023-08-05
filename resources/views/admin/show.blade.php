@@ -43,7 +43,7 @@
 
                 <h4>Add comment</h4>
 
-                <form method="post" action="/comments/{{$post->id}}"}>
+                <form method="post" action="/comments/{{$post->id}}">
 
                     @csrf
 

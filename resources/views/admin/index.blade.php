@@ -1,11 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <style>
-        body {background-color: #000000;}
-        h1   {color: #ffffff;}
-        p    {color: #ffffff;}
-    </style>
+
     <div class="container" >
         <div class="row">
             <div class="col-12 pt-2">
@@ -16,7 +12,8 @@
                     </div>
                     <div class="col-4">
                         <p>Create new Post</p>
-                        <a href="/blogposts/create" class="btn btn-primary btn-sm">Add Post</a>
+                        <a href="/blogposts/create" class="btn btn-primary btn-sm" style="margin-right: 20px">Add Post</a>
+                            <a href= "/gallery" class="btn btn-primary btn-sm">Image Gallery</a>
                     </div>
                 </div>
 

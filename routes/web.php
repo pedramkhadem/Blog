@@ -29,7 +29,11 @@ Route::resource('blogposts' , PostController::class);
 
 Route::post('/comments/{blogPost}' , [CommentController::class , 'store']);
 
-Route::get('/image/{image}' , [ImageController::class , 'show']);
+
+Route::get('/gallery' , [ImageController::class , 'index']);
+
+Route::post('/gallery/store' , [ImageController::class , 'store']);
+Route::delete('/gallery/{image}', [ImageController::class , 'destroy']);
 
 
 Auth::routes();

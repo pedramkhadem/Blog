@@ -25,7 +25,7 @@ class PostController extends Controller
 
     public function index()
     {
-       $posts = BlogPost::paginate(10)->withQueryString();
+       $posts = BlogPost::paginate(20);
 
         return view('admin.index',compact('posts'));
     }
@@ -72,7 +72,7 @@ class PostController extends Controller
     public function show(BlogPost $blogpost)
     {
 
-        $comment = $blogpost->comments()->Paginate(5)->withQueryString() ;
+        $comment = $blogpost->comments()->Paginate(5);
         return view('admin.show', [
             'post' => $blogpost,
             'cm'=>$comment,
