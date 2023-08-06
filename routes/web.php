@@ -31,6 +31,7 @@ Route::post('/comments/{blogPost}' , [CommentController::class , 'store']);
 
 
 Route::get('/gallery' , [ImageController::class , 'index']);
+Route::get('/gallery/{image}' , [ImageController::class , 'show']);
 
 Route::post('/gallery/store' , [ImageController::class , 'store']);
 Route::delete('/gallery/{image}', [ImageController::class , 'destroy']);

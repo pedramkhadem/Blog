@@ -39,7 +39,7 @@
                                 </td>
                                 <td>{{$post->title}}</td>
                                 <td>
-                                    <a href="/blogposts/{{$post->id}}" class="btn btn-danger">Show Post</a>
+                                    <a href="/blogposts/{{$post->id}}" class="btn btn-info">Show Post</a>
                                 </td>
                             </tr>
                         @empty

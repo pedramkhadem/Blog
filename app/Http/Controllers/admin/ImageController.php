@@ -39,24 +39,35 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'images' => 'required',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
 
-        if ($request->hasFile('images')) {
-            $images = $request->file('images');
-            foreach ($images as $image) {
+
+        $images = [];
+        if ($request->images){
+            foreach($request->images as $key => $image)
+            {
+                $imageName = time().rand(1,99).'.'.$image->extension();
                 $path = 'public/images/';
-                $imageName = time() . "." . $image->getClientOriginalExtension();
                 $image->move($path, $imageName);
-                $upload_image_url = "$imageName";
-                Image::create([
-                    'image' => $upload_image_url,
-                    'name' =>$imageName ,
-                    'type'=>'gallery'
-                ]);
+
+
+                $images[]['name'] = $imageName;
             }
         }
 
+        foreach ($images as $key => $image) {
+            $upload_image_url = $image["name"];
+            Image::create([
+                'image' =>$upload_image_url,
+                'type' => 'gallery'
+            ]);
+        }
 
-        return redirect('gallery/');
+        return redirect('gallery/')->with('success','You have successfully upload image.');
+
     }
 
     /**
@@ -64,15 +75,15 @@ class ImageController extends Controller
      */
     public function show(Image $image)
     {
-//        return view('admin.show' , [
-//            'image'=>$image,
-//        ]);
+        return view('admin.image' , [
+        'image'=>$image,
+    ]);
     }
 
     public function destroy(Image $image)
     {
         $image->delete();
-        return redirect('/gallery');
+        return redirect('/gallery')->with('delete','You have successfully deleted image.' );
     }
 
 }
